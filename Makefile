@@ -1,9 +1,8 @@
-default: standalone
+default: build
 
-standalone: standalone/source/* include/fileme/*
+build: standalone/source/* include/fileme/*
 	cmake -S standalone -B build/standalone
 	cmake --build build/standalone -j4 --config Release
-
 
 all: standalone/source/* source/* test/source/* include/fileme/*
 	cmake -S all -B build
@@ -23,7 +22,7 @@ format-changes: format
 format-fix: format
 	cmake --build build/test --target fix-format
 
-run: standalone
+run: build
 	./build/standalone/FileMe
 
 clean:

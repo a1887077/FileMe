@@ -31,15 +31,15 @@ There are several dependencies required to build this project, they are as follo
 
 There are a number of make targets which can be used to build different targets. These are as follows:
 
-### Target: standalone
+### Target: build
 
 This will build the standalone application and required dependencies, placing the result in the `build` directory.
 
 ```bash
-make standalone
+make build
 ```
 
-After running `make standalone` the application can be run by executing `./build/fileme`. Note that this is the same as the `make run` build target.
+After running `make build` the application can be run by executing `./build/fileme`. Note that this is the same as the `make run` build target.
 
 ### Target: test
 

@@ -2,6 +2,14 @@
 
 #include <fstream>
 
+fs::path Manager::get_workspace_path(void) {
+  return this->workspace_path;
+}
+
+void Manager::set_workspace_path(fs::path workspace_path) {
+  this->workspace_path = workspace_path;
+}
+
 int Manager::remove(fs::path target_path) {
   if (target_path.empty()) {
     return -1;
@@ -47,14 +55,17 @@ int Manager::rename(fs::path old_path, fs::path new_path) {
 
 int Manager::create(fs::path new_path) {
   std::ofstream{ new_path }.put('a');
+
+  return 0;
 }
 
-int Manager::copy(fs::path target_path) {
+/* int Manager::copy(fs::path target_path) {
 
+  return 0;
 }
 
 int Manager::paste(fs::path destination_path) {
   
   
   return 0;
-}
+} */
