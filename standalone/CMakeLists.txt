@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.14...3.22)
 
 project(FileMeStandalone LANGUAGES CXX)
 
+find_package(Curses REQUIRED)
+
 # --- Import tools ----
 
 include(../cmake/tools.cmake)
@@ -18,6 +20,8 @@ CPMAddPackage(
 
 CPMAddPackage(NAME FileMe SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
+include_directories(${CURSES_INCLUDE_DIRS})
+
 # ---- Create standalone executable ----
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
@@ -26,4 +30,5 @@ add_executable(${PROJECT_NAME} ${sources})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "FileMe")
 
+target_link_libraries(${PROJECT_NAME} FileMe::FileMe ${CURSES_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} FileMe::FileMe cxxopts)
