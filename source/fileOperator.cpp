@@ -37,18 +37,35 @@ int FileOperator::rename(fs::path old_path, fs::path new_path) {
 }
 
 int FileOperator::create(fs::path new_path) {
-  std::ofstream{new_path}.put('a');
+  if (!new_path.has_filename()) {
+    return -1;
+  }
+
+  std::ofstream{new_path}.flush();
 
   return 0;
 }
 
-/* int FileOperator::copy(fs::path target_path) {
+int FileOperator::copy(fs::path target_path) {
+  if (!fs::exists(target_path)) {
+    return -1;
+  }
+
+  this->copy_path = target_path;
 
   return 0;
 }
 
 int FileOperator::paste(fs::path destination_path) {
+  if (fs::exists(destination_path) || !fs::exists(this->copy_path)) {
+    return -1;
+  }
 
+  if (destination_path.has_filename() != this->copy_path.has_filename()) {
+    return -1;
+  }
+
+  fs::copy(this->copy_path, destination_path);
 
   return 0;
-} */
+}
