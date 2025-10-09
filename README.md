@@ -29,7 +29,7 @@ There are several dependencies required to build this project, they are as follo
 
 ## Building the Application
 
-There are a number of make targets which can be used to build different targets. These are as follows:
+There are a number of make targets which can be used to build different targets. Note that they must be run from the root directory of this project. They are as follows:
 
 ### Target: build
 
@@ -52,7 +52,7 @@ make test
 
 Format the source code via `clang-format`.
 ```bash
-make test
+make format
 ```
 
 ### Target: all
