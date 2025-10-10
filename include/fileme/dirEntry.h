@@ -9,17 +9,14 @@ namespace fs = std::filesystem;
 /**
  * @brief The type of DirEntry
  */
-enum DirEntryType {
-  NULL_ENTRY,
-  FILE_ENTRY,
-  DIRECTORY_ENTRY
-};
+enum DirEntryType { NULL_ENTRY, FILE_ENTRY, DIRECTORY_ENTRY };
 
 /**
  * @brief A class to describe entries in a directory
  */
 class DirEntry {
   friend class Manager;
+
 private:
   // the absolute path of the entry
   fs::path entry_path;

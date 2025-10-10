@@ -69,7 +69,7 @@ int FileOperator::paste(fs::path destination_path) {
   } else if (!fs::exists(this->copy_path)) {
     return -E_ITEM_DOES_NOT_EXIST;
   }
-  
+
   fs::copy(this->copy_path, destination_path);
 
   return SUCCESS;

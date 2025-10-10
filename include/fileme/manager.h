@@ -4,16 +4,16 @@
 #include <fileme/dirEntry.h>
 #include <fileme/fileOperator.h>
 
+#include <filesystem>
 #include <string>
 #include <vector>
-#include <filesystem>
 
 namespace fs = std::filesystem;
 
 /**
  * @brief A manager class for files and directories, to be used as the high-level interface
  */
-class Manager: private FileOperator {
+class Manager : private FileOperator {
 private:
   // the path of the workspace in which the manager is working
   fs::path workspace_path;
@@ -24,7 +24,7 @@ private:
 
 public:
   Manager(fs::path _workspace_path);
-  Manager(): Manager(fs::current_path()) {};
+  Manager() : Manager(fs::current_path()) {};
 
   /**
    * @brief List the DirEntries in the current workspace
@@ -68,16 +68,15 @@ public:
    * @retval 0 on success, or negative FileOperator::OperatorError code on failure
    */
   int paste(std::string new_name);
-  
+
   /**
    * @brief Paste the selected DirEntry object into the current working directory
    * @retval 0 on success, or negative FileOperator::OperatorError code on failure
    */
   int paste(void);
-  
+
   int nav_into_dir(DirEntry target_dir);
   int nav_out_of_dir(void);
-
 };
 
 #endif  // MANAGER_H

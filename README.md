@@ -43,7 +43,7 @@ After running `make build` the application can be run by executing `./build/file
 
 ### Target: test
 
-Run the application unit tests via doctest, reporting the results.
+Run the application unit tests via `doctest`, reporting the results.
 ```bash
 make test
 ```
