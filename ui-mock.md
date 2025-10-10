@@ -2,7 +2,7 @@
 
 General UI ideas:
 
-files / directories contained within the current workspace are presented as a horizontal list of file names, you can only see the items visible at the current directory level.
+files / directories contained within the current workspace are presented as a vertical list of file names, you can only see the items visible at the current directory level.
 
 If a directory is navigated into, the list will refresh with the items contained within that directory.
 
@@ -15,7 +15,7 @@ At a basic level, this will look like:
 ```
 +-------------------------------------------------------------------------+
 |                                                                         | Window 1
-|  [..] <<< always visible?                                               |
+|  [..] <<< always visible? (if selected move to the previous directory)  |
 |  file.c                                                                 |
 |  file.h     <<< highlight currently active entry?                       |
 |  directory/                                                             |
@@ -39,3 +39,16 @@ Possible command window messages:
 Highlight `[C]` when an item is selected to be copied?
 
 If one scrolls down a list which is too large to fit in the list, move the three-dot `...` indicator to the start of the list (i.e. a three-dot indicator can exist on either end of the list if there is spill out of the window). Perhaps the visible file entries should be in their own curses window?
+
+## Window Sizes
+Sizes of the curses windows given the above assumption for layout.
+
+All windows will have a width which is the max the terminal can provide, aiming to enforce the minimum 80 character width (display warning if the width is < 80?).
+
+Windows will have a top/bottom padding to ensure sufficient partitioning. This padding will be one line, and can be taken up with a separating pattern as in the case of the control menu.
+
+File list height: At minimum height of 40 lines this will give a window height of 33 lines. This height will increase with available terminal space.
+
+Command list height: 2 lines. Do not worry about distribution horizontally
+
+Command window height: 1 line. Should we have a command prompt (`>>>`, etc)?
