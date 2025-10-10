@@ -13,15 +13,18 @@ namespace fs = std::filesystem;
 /**
  * @brief A manager class for files and directories, to be used as the high-level interface
  */
-class Manager {
+class Manager: private FileOperator {
 private:
   // the path of the workspace in which the manager is working
   fs::path workspace_path;
   // a list of DirEntries in the current workspace
-  std::vector<DirEntry> entrylist;
+  std::vector<DirEntry> entry_list;
+
+  void buildList(void);
 
 public:
-  Manager() {};
+  Manager(fs::path _workspace_path);
+  Manager(): Manager(fs::current_path()) {};
 
   /**
    * @brief List the DirEntries in the current workspace
@@ -40,9 +43,9 @@ public:
    * @brief Create a new DirEntry item and corresponding filesystem entry
    * @param name The name of the new file or directory to create
    * @param type A dirEntry::dirEntryType describing the type dirEntry to create
-   * @retval A DirEntry describing the new entry which was created
+   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
    */
-  DirEntry create(std::string name, bool type);
+  int create(std::string name, DirEntryType type);
 
   /**
    * @brief Rename a DirEntry and it's corresponding filesystem entry
@@ -60,18 +63,18 @@ public:
   int copy(DirEntry entry);
 
   /**
-   * @brief Paste the selected DirEntry object into the current working directory
-   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
-   */
-  int paste(void);
-
-  /**
    * @brief Paste the selected DirEntry object into the current working directory with a new name
    * @param new_name The new name of the pasted DirEntry item
    * @retval 0 on success, or negative FileOperator::OperatorError code on failure
    */
   int paste(std::string new_name);
-
+  
+  /**
+   * @brief Paste the selected DirEntry object into the current working directory
+   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+   */
+  int paste(void);
+  
   int nav_into_dir(DirEntry target_dir);
   int nav_out_of_dir(void);
 
