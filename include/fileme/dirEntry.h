@@ -6,16 +6,31 @@
 
 namespace fs = std::filesystem;
 
+/**
+ * @brief The type of DirEntry
+ */
+enum DirEntryType {
+  NULL_ENTRY,
+  FILE_ENTRY,
+  DIRECTORY_ENTRY
+};
+
+/**
+ * @brief A class to describe entries in a directory
+ */
 class DirEntry {
 private:
+  // the absolute path of the entry
   fs::path entrypath;
+  // the name of the entry
   std::string entryname;
-  bool entrytype;
+  // the type of the entry
+  DirEntryType entrytype;
 
 public:
-  DirEntry(fs::path _entrypath, std::string _entryname, bool _entrytype)
+  DirEntry(fs::path _entrypath, std::string _entryname, DirEntryType _entrytype)
       : entrypath(_entrypath), entryname(_entryname), entrytype(_entrytype) {};
-  DirEntry() : DirEntry(fs::path(), "", false) {};
+  DirEntry() : DirEntry(fs::path(), "", NULL_ENTRY) {};
 };
 
 #endif  // FILE_H
