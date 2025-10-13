@@ -19,6 +19,8 @@ Manager::Manager(fs::path _workspace_path) {
 
 std::vector<DirEntry> Manager::getEntries(void) { return this->entry_list; }
 
+size_t Manager::numEntries(void) { return this->entry_list.size(); }
+
 int Manager::remove(DirEntry entry) {
   int ret = 0;
   ret = FileOperator::remove(entry.entry_path);

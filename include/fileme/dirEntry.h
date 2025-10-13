@@ -29,6 +29,12 @@ public:
   DirEntry(fs::path _entrypath, std::string _entryname, DirEntryType _entrytype)
       : entry_path(_entrypath), entry_name(_entryname), entry_type(_entrytype) {};
   DirEntry() : DirEntry(fs::path(), "", NULL_ENTRY) {};
+
+  std::string getName(void);
+
+  fs::path getPath(void);
+
+  DirEntryType getType(void);
 };
 
 #endif  // FILE_H

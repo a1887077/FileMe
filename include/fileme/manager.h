@@ -33,6 +33,12 @@ public:
   std::vector<DirEntry> getEntries(void);
 
   /**
+   * @brief Get the number of file entries recorded in the current directory
+   * @retval A size_t describing the number of elements in the entry_list member variable
+   */
+  size_t numEntries(void);
+
+  /**
    * @brief Remove a DirEntry item and it's corresponding filesystem entry
    * @param entry The DirEntry object describing the file or directory to remove
    * @retval 0 on success, or negative FileOperator::OperatorError code on failure

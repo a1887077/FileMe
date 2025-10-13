@@ -1,38 +1,42 @@
-#include <fileme/version.h>
 #include <curses.h>
+#include <fileme/manager.h>
+#include <fileme/version.h>
+
 #include <iostream>
 #include <string>
-#include "fileme/fileOperator.h"
 #include <vector>
-#include <string>
-void printFiles(std::vector<std::string> vector, int index){
-      // write code here to show the file in the management system
-      clear();
-      printw("Files in the current database (Green: shows the currently selected file):\n");
-      refresh();
-      
-      for(size_t i = 0; i < vector.size(); i++){
-        if(i == index){
-          attron(COLOR_PAIR(1));
-          printw("- %s\n", vector[i].c_str());
-          attroff(COLOR_PAIR(1));
-        } else {
-          printw("- %s\n", vector[i].c_str());
-        }
-      }
-      printw("\n\n\nPress 'n' to create other files, press 'q' to exit\n"); // edit this later
-      refresh();
-}
 
+void printFiles(Manager& fileManager, int index) {
+  // write code here to show the file in the management system
+  clear();
+  printw("Files in the current database (Green: shows the currently selected file):\n");
+  refresh();
+
+  std::vector<DirEntry> files = fileManager.getEntries();
+
+  for (size_t i = 0; i < files.size(); i++) {
+    DirEntry file = files[i];
+    if (i == index) {
+      attron(COLOR_PAIR(1));
+      printw("- %s\n", file.getName().c_str());
+      attroff(COLOR_PAIR(1));
+    } else {
+      printw("- %s\n", file.getName().c_str());
+    }
+  }
+  printw("\n\n\nPress 'n' to create other files, press 'q' to exit\n");  // edit this later
+  refresh();
+}
 
 int main(int argc, char** argv) {
   initscr();
   curs_set(0);
-  keypad(stdscr, TRUE);   // Enable arrow keys and function keys
-  noecho();               // Don't echo input
-  curs_set(0);            // Hide cursor
-  std::vector<std::string> fileStorage; // to store all the created files
-  FileOperator console;
+  keypad(stdscr, TRUE);                  // Enable arrow keys and function keys
+  noecho();                              // Don't echo input
+  curs_set(0);                           // Hide cursor
+  // std::vector<std::string> fileStorage;  // to store all the created files
+  Manager fileManager;
+
   start_color();
   use_default_colors();
   init_pair(1, COLOR_GREEN, -1);
@@ -44,37 +48,40 @@ int main(int argc, char** argv) {
 
   int ch;
   int index = 0;
-  
+
   bool mainWindow = false;
-  char filename[21]; // store the name (20 characters, can change)
-  int files = 0;
+  char filename[21];  // store the name (20 characters, can change)
+  int files = fileManager.numEntries();
   bool skipstart = false;
-  while(true){
+  while (true) {
     bool showFiles = false;
-    if(skipstart == false){
-      if(files == 0){
+    if (skipstart == false) {
+      if (files == 0) {
         clear();
         printw("No files in the management system, press 'n' to create a new file");
         refresh();
+      } else {
+        showFiles = true;
       }
+
       ch = getch();
-      if(ch == 'q'){
+      if (ch == 'q') {
         break;
       }
-      if(ch == 'n'){
+      if (ch == 'n') {
         clear();
         mainWindow = true;
       }
     }
 
-    while(mainWindow == true){
+    while (mainWindow == true) {
       // this is where we ask the user to input a file name
       clear();
       printw("Please Pick a file name (max 20 characters):\n");
       refresh();
 
-      echo(); // DO NOT REMOVE
-      getstr(filename); // writes over any old name
+      echo();            // DO NOT REMOVE
+      getstr(filename);  // writes over any old name
       noecho();
 
       printw("You entered: %s\n", filename);
@@ -83,13 +90,10 @@ int main(int argc, char** argv) {
       printw("Do you confirm? [Y/N]");
       refresh();
       int local = getch();
-      if(local == 'Y'){
+      if (local == 'Y') {
         mainWindow = false;
-        files++;
-        fs::path new_file = filename;
-        int answer = console.create(new_file); // create the file
-        if(answer == 0){
-          fileStorage.push_back(new_file.string());
+        if (fileManager.create(filename, FILE_ENTRY) == 0) {
+          files++;
           showFiles = true;
         }
         break;
@@ -97,56 +101,53 @@ int main(int argc, char** argv) {
       // else we loop back
     }
 
-
     bool breakout = false;
-    if(showFiles == true){
+    if (showFiles == true) {
       int currentIndex = 0;
       clear();
       printw("File Added to system, press 'ENTER' to continue");
       refresh();
       getch();
 
-      printFiles(fileStorage, currentIndex);
+      printFiles(fileManager, currentIndex);
 
-      while(true){
+      while (true) {
         ch = getch();
-        if(ch == 'q'){
+        if (ch == 'q') {
           breakout = true;
           break;
         }
-        if(ch == 'n'){
+        if (ch == 'n') {
           mainWindow = true;
           skipstart = true;
           break;
         }
         clear();
-        switch(ch){
+        switch (ch) {
           case KEY_UP:
-            if(currentIndex != 0){
-              printFiles(fileStorage, currentIndex - 1);
+            if (currentIndex != 0) {
+              printFiles(fileManager, currentIndex - 1);
               currentIndex--;
             } else {
-              printFiles(fileStorage, 0);
+              printFiles(fileManager, 0);
             }
             break;
           case KEY_DOWN:
-            if(currentIndex != fileStorage.size() - 1){
-              printFiles(fileStorage, currentIndex);
+            if (currentIndex != fileManager.numEntries() - 1) {
+              printFiles(fileManager, currentIndex);
               currentIndex++;
             } else {
-              printFiles(fileStorage, fileStorage.size() - 1);
+              printFiles(fileManager, fileManager.numEntries() - 1);
             }
             break;
         }
 
-        printFiles(fileStorage, currentIndex);
-      }      
+        printFiles(fileManager, currentIndex);
+      }
     }
-    if(breakout){
+    if (breakout) {
       break;
     }
-
-
   }
   // std::cout << "hello world" << std::endl;
   // printw("hi");
@@ -155,4 +156,3 @@ int main(int argc, char** argv) {
   endwin();
   return 0;
 }
-
