@@ -17,9 +17,9 @@ void printFiles(Manager& fileManager, int index) {
   for (size_t i = 0; i < files.size(); i++) {
     DirEntry file = files[i];
     if (i == index) {
-      attron(COLOR_PAIR(1));
+      attron(COLOR_PAIR(1) | A_REVERSE);
       printw("- %s\n", file.getName().c_str());
-      attroff(COLOR_PAIR(1));
+      attroff(COLOR_PAIR(1) | A_REVERSE);
     } else {
       printw("- %s\n", file.getName().c_str());
     }
@@ -31,9 +31,9 @@ void printFiles(Manager& fileManager, int index) {
 int main(int argc, char** argv) {
   initscr();
   curs_set(0);
-  keypad(stdscr, TRUE);                  // Enable arrow keys and function keys
-  noecho();                              // Don't echo input
-  curs_set(0);                           // Hide cursor
+  keypad(stdscr, TRUE);  // Enable arrow keys and function keys
+  noecho();              // Don't echo input
+  curs_set(0);           // Hide cursor
   // std::vector<std::string> fileStorage;  // to store all the created files
   Manager fileManager;
 
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
       refresh();
       int local = getch();
       if (local == 'Y') {
-        mainWindow = false;
+        mainWindow = false; 
         if (fileManager.create(filename, FILE_ENTRY) == 0) {
           files++;
           showFiles = true;
