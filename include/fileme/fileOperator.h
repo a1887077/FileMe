@@ -23,6 +23,7 @@ public:
     E_INVALID_PATH = 2,
     E_ITEM_EXISTS = 3,
     E_ITEM_DOES_NOT_EXIST = 4,
+    E_INVALID_TYPE = 5,
   };
 
   /**

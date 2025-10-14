@@ -154,6 +154,18 @@ void Interface::show_file_list(void) {
 int Interface::get_file_command(void) { return wgetch(this->file_list_win); }
 
 /**
+ * @brief Get the currently highlighted filentry
+ * @retval A DirEntry object of the entry which is currently highlighted
+ */
+DirEntry Interface::get_highlighted(void) {
+  if (this->highlighted_item == 0) {
+    return DirEntry();
+  }
+
+  return this->getEntries().at(this->highlighted_item-1);
+}
+
+/**
  * @brief Move the current file selection up in the file list
  */
 void Interface::scroll_up(void) {
@@ -230,6 +242,10 @@ std::string Interface::ask_filename(void) {
 
   // convert the c-style string to a c++ string and return it
   return std::string(response);
+}
+
+void Interface::show_path(void) {
+  this->show_message(this->workspace_path.parent_path());
 }
 
 /**

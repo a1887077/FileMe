@@ -12,15 +12,16 @@ int main(int argc, char** argv) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  interface.show_message(" >>> ");
+  interface.show_message(" ");
 
   bool quit = false;
 
   while (quit == false) {
     int command = interface.get_file_command();
+    DirEntry highlighted = interface.get_highlighted();
 
     switch (command) {
-      case 'q':
+      case 'q': 
       case KEY_EXIT:
         interface.show_message("Bye...");
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -39,12 +40,25 @@ int main(int argc, char** argv) {
         interface.show_file_list();
         break;
 
+      case 10:
       case KEY_ENTER:
         interface.show_message("enter directory");
+
+        if (highlighted.getType() == DIRECTORY_ENTRY) {
+          interface.nav_into_dir(highlighted);
+          interface.show_file_list();
+          interface.show_path();
+        } else {
+          interface.show_error("Cannot enter - is not a directory");
+        }
+
         break;
 
       case KEY_BACKSPACE:
         interface.show_message("leave directory");
+        interface.nav_out_of_dir();
+        interface.show_file_list();
+        interface.show_path();
         break;
 
       case 'n':
@@ -78,6 +92,7 @@ int main(int argc, char** argv) {
 
       default:
         interface.show_error("invalid command");
+        interface.show_error(std::to_string(command));
         break;
     }
   }

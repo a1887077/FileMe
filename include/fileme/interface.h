@@ -32,6 +32,7 @@ public:
 
   // functions related to the list of files
   void show_file_list(void);
+  DirEntry get_highlighted(void);
   int get_file_command(void);
   void scroll_up(void);
   void scroll_down(void);
@@ -39,6 +40,7 @@ public:
   // functions related to the command entry window
   bool ask_confirmation(void);
   std::string ask_filename(void);
+  void show_path(void);
   void show_message(std::string message);
   void show_error(std::string error);
 };

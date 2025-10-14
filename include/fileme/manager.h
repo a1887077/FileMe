@@ -16,13 +16,13 @@ namespace fs = std::filesystem;
 class Manager : private FileOperator {
 private:
   // the path of the workspace in which the manager is working
-  fs::path workspace_path;
   // a list of DirEntries in the current workspace
   std::vector<DirEntry> entry_list;
-
+  
   void buildList(void);
-
-public:
+  
+  public:
+  fs::path workspace_path;
   Manager(fs::path _workspace_path);
   Manager() : Manager(fs::current_path()) {};
 
@@ -81,7 +81,17 @@ public:
    */
   int paste(void);
 
+  /**
+   * @brief Navigate into a different directory, moving the workspace directory
+   * @param target_dir The directory to mvoe into
+   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+   */
   int nav_into_dir(DirEntry target_dir);
+
+  /**
+   * @brief Navigate up one directory level, updating the workspace directory
+   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+   */
   int nav_out_of_dir(void);
 };
 
