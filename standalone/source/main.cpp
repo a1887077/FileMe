@@ -1,158 +1,86 @@
 #include <curses.h>
-#include <fileme/manager.h>
-#include <fileme/version.h>
+#include <fileme/interface.h>
 
-#include <iostream>
+#include <chrono>
 #include <string>
-#include <vector>
-
-void printFiles(Manager& fileManager, int index) {
-  // write code here to show the file in the management system
-  clear();
-  printw("Files in the current database (Green: shows the currently selected file):\n");
-  refresh();
-
-  std::vector<DirEntry> files = fileManager.getEntries();
-
-  for (size_t i = 0; i < files.size(); i++) {
-    DirEntry file = files[i];
-    if (i == index) {
-      attron(COLOR_PAIR(1) | A_REVERSE);
-      printw("- %s\n", file.getName().c_str());
-      attroff(COLOR_PAIR(1) | A_REVERSE);
-    } else {
-      printw("- %s\n", file.getName().c_str());
-    }
-  }
-  printw("\n\n\nPress 'n' to create other files, press 'q' to exit\n");  // edit this later
-  refresh();
-}
+#include <thread>
 
 int main(int argc, char** argv) {
-  initscr();
-  curs_set(0);
-  keypad(stdscr, TRUE);  // Enable arrow keys and function keys
-  noecho();              // Don't echo input
-  curs_set(0);           // Hide cursor
-  // std::vector<std::string> fileStorage;  // to store all the created files
-  Manager fileManager;
+  Interface interface;
 
-  start_color();
-  use_default_colors();
-  init_pair(1, COLOR_GREEN, -1);
+  interface.show_message("Welcome to FileMe.");
 
-  // intro message (add whatever else you want btw)
-  printw("Welcome to file manager, press 'ENTER' to start");
-  refresh();
-  getch();
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  int ch;
-  int index = 0;
+  interface.show_message(" >>> ");
 
-  bool mainWindow = false;
-  char filename[21];  // store the name (20 characters, can change)
-  int files = fileManager.numEntries();
-  bool skipstart = false;
-  while (true) {
-    bool showFiles = false;
-    if (skipstart == false) {
-      if (files == 0) {
-        clear();
-        printw("No files in the management system, press 'n' to create a new file");
-        refresh();
-      } else {
-        showFiles = true;
-      }
+  bool quit = false;
 
-      ch = getch();
-      if (ch == 'q') {
+  while (quit == false) {
+    int command = interface.get_file_command();
+
+    switch (command) {
+      case 'q':
+      case KEY_EXIT:
+        interface.show_message("Bye...");
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        quit = true;
         break;
-      }
-      if (ch == 'n') {
-        clear();
-        mainWindow = true;
-      }
-    }
 
-    while (mainWindow == true) {
-      // this is where we ask the user to input a file name
-      clear();
-      printw("Please Pick a file name (max 20 characters):\n");
-      refresh();
-
-      echo();            // DO NOT REMOVE
-      getstr(filename);  // writes over any old name
-      noecho();
-
-      printw("You entered: %s\n", filename);
-      refresh();
-      // confirm message
-      printw("Do you confirm? [Y/N]");
-      refresh();
-      int local = getch();
-      if (local == 'Y') {
-        mainWindow = false; 
-        if (fileManager.create(filename, FILE_ENTRY) == 0) {
-          files++;
-          showFiles = true;
-        }
+      case KEY_UP:
+        interface.show_message("scroll up");
+        interface.scroll_up();
+        interface.show_file_list();
         break;
-      }
-      // else we loop back
-    }
 
-    bool breakout = false;
-    if (showFiles == true) {
-      int currentIndex = 0;
-      clear();
-      printw("File Added to system, press 'ENTER' to continue");
-      refresh();
-      getch();
+      case KEY_DOWN:
+        interface.show_message("scroll down");
+        interface.scroll_down();
+        interface.show_file_list();
+        break;
 
-      printFiles(fileManager, currentIndex);
+      case KEY_ENTER:
+        interface.show_message("enter directory");
+        break;
 
-      while (true) {
-        ch = getch();
-        if (ch == 'q') {
-          breakout = true;
-          break;
-        }
-        if (ch == 'n') {
-          mainWindow = true;
-          skipstart = true;
-          break;
-        }
-        clear();
-        switch (ch) {
-          case KEY_UP:
-            if (currentIndex != 0) {
-              printFiles(fileManager, currentIndex - 1);
-              currentIndex--;
-            } else {
-              printFiles(fileManager, 0);
-            }
-            break;
-          case KEY_DOWN:
-            if (currentIndex != fileManager.numEntries() - 1) {
-              printFiles(fileManager, currentIndex);
-              currentIndex++;
-            } else {
-              printFiles(fileManager, fileManager.numEntries() - 1);
-            }
-            break;
-        }
+      case KEY_BACKSPACE:
+        interface.show_message("leave directory");
+        break;
 
-        printFiles(fileManager, currentIndex);
-      }
-    }
-    if (breakout) {
-      break;
+      case 'n':
+      case 'N':
+        interface.show_message("new file");
+        interface.ask_filename();
+
+        break;
+
+      case 'r':
+      case 'R':
+        interface.show_message("rename file");
+        interface.ask_filename();
+        break;
+
+      case 'd':
+      case 'D':
+        interface.show_message("delete file");
+        interface.ask_confirmation();
+        break;
+
+      case 'c':
+      case 'C':
+        interface.show_message("copy file");
+        break;
+
+      case 'p':
+      case 'P':
+        interface.show_message("paste file");
+        break;
+
+      default:
+        interface.show_error("invalid command");
+        break;
     }
   }
-  // std::cout << "hello world" << std::endl;
-  // printw("hi");
-  // refresh();
 
-  endwin();
   return 0;
 }
