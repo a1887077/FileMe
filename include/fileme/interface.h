@@ -1,3 +1,6 @@
+#ifndef INTERFACE_H
+#define INTERFACE_H
+
 #include <curses.h>
 #include <fileme/manager.h>
 
@@ -39,3 +42,5 @@ public:
   void show_message(std::string message);
   void show_error(std::string error);
 };
+
+#endif // INTERFACE_H
