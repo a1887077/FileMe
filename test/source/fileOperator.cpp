@@ -17,7 +17,6 @@ TEST_CASE("FileMe File Operator Deletion") {
 
   // creating files to test with
   fs::path file_path = temp_path / "foo.hpp";
-
   std::ofstream(file_path).write("bar", 3);
 
   fs::path dir_path = temp_path / "empty";

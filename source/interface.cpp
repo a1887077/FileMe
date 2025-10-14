@@ -127,12 +127,12 @@ void Interface::show_file_list(void) {
     } else if (i == 0 && scroll_offset > 0) {
       // we have scrolled down, display a 'more contents' symbol
       wprintw(this->file_list_win, "   ...\n");
-    } else if (index - 1 < entries.size() && i != this->list_entries - 1) {
+    } else if (index - 1 < (int) entries.size() && i != this->list_entries - 1) {
       // display a directory entry
       DirEntry entry = entries[index - 1];
       char dirSeparator = entry.getType() == DIRECTORY_ENTRY ? '/' : ' '; // if the directory is a file or not
       wprintw(this->file_list_win, "   %s%c\n", entry.getName().c_str(), dirSeparator);
-    } else if (index - 1 < entries.size() && i == this->list_entries - 1) {
+    } else if (index - 1 < (int) entries.size() && i == this->list_entries - 1) {
       // we have scrolled up, display a 'more contents' symbol
       wprintw(this->file_list_win, "   ...\n");
     }
@@ -173,7 +173,7 @@ void Interface::scroll_up(void) {
  */
 void Interface::scroll_down(void) {
   // is it possible to scroll down
-  if (this->highlighted_item < this->numEntries()) {
+  if (this->highlighted_item < (int) this->numEntries()) {
     this->highlighted_item++;
   }
 
