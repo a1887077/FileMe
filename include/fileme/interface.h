@@ -43,6 +43,19 @@ public:
   void show_path(void);
   void show_message(std::string message);
   void show_error(std::string error);
+
+  /**
+   * @brief Navigate into a different directory, moving the workspace directory
+   * @param target_dir The directory to mvoe into
+   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+   */
+  int nav_into_dir(DirEntry target_dir);
+
+  /**
+   * @brief Navigate up one directory level, updating the workspace directory
+   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+   */
+  int nav_out_of_dir(void);
 };
 
 #endif // INTERFACE_H

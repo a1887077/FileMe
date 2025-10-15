@@ -14,7 +14,9 @@ int main(int argc, char** argv) {
 
   interface.show_message(" ");
 
+  // declare variables used while performing commands
   bool quit = false;
+  std::string new_filename;
 
   while (quit == false) {
     int command = interface.get_file_command();
@@ -44,6 +46,8 @@ int main(int argc, char** argv) {
       case KEY_ENTER:
         interface.show_message("enter directory");
 
+        /* TBC: handle case when at index 0 ([..]) */
+
         if (highlighted.getType() == DIRECTORY_ENTRY) {
           interface.nav_into_dir(highlighted);
           interface.show_file_list();
@@ -64,8 +68,10 @@ int main(int argc, char** argv) {
       case 'n':
       case 'N':
         interface.show_message("new file");
-        interface.ask_filename();
-
+        new_filename = interface.ask_filename();
+        interface.create(new_filename, FILE_ENTRY);
+        interface.show_file_list();
+        
         break;
 
       case 'r':

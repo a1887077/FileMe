@@ -282,3 +282,43 @@ void Interface::show_error(std::string error) {
   // display the desired error message
   wrefresh(this->command_entry_win);
 }
+
+
+/**
+ * @brief Navigate into a different directory, moving the workspace directory
+ * @param target_dir The directory to mvoe into
+ * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+ */
+int Interface::nav_into_dir(DirEntry target_dir) {
+  if (target_dir.getType() != DIRECTORY_ENTRY) {
+    return -E_INVALID_TYPE;
+  }
+
+  if (fs::exists(target_dir.getPath()) == false) {
+    return -E_INVALID_PATH;
+  }
+
+  // update the workspace path
+  this->workspace_path = target_dir.getPath();
+  this->scroll_offset = 0;
+  this->highlighted_item = 0;
+
+  // update the directory entry list
+  this->buildList();
+
+  return 0;
+}
+
+/**
+ * @brief Navigate up one directory level, updating the workspace directory
+ * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+ */
+int Interface::nav_out_of_dir(void) {
+  this->workspace_path = this->workspace_path.parent_path();
+  this->scroll_offset = 0;
+  this->highlighted_item = 0;
+
+  this->buildList();
+
+  return 0;
+}

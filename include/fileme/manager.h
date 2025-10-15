@@ -13,12 +13,13 @@ namespace fs = std::filesystem;
 /**
  * @brief A manager class for files and directories, to be used as the high-level interface
  */
-class Manager : private FileOperator {
+class Manager : protected FileOperator {
 private:
   // the path of the workspace in which the manager is working
   // a list of DirEntries in the current workspace
   std::vector<DirEntry> entry_list;
   
+protected:
   void buildList(void);
   
   public:
@@ -80,19 +81,6 @@ private:
    * @retval 0 on success, or negative FileOperator::OperatorError code on failure
    */
   int paste(void);
-
-  /**
-   * @brief Navigate into a different directory, moving the workspace directory
-   * @param target_dir The directory to mvoe into
-   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
-   */
-  int nav_into_dir(DirEntry target_dir);
-
-  /**
-   * @brief Navigate up one directory level, updating the workspace directory
-   * @retval 0 on success, or negative FileOperator::OperatorError code on failure
-   */
-  int nav_out_of_dir(void);
 };
 
 #endif  // MANAGER_H

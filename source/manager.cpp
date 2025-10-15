@@ -97,38 +97,3 @@ int Manager::rename(DirEntry& entry, std::string new_name) {
  * @retval 0 on success, or negative FileOperator::OperatorError code on failure
  */
 int Manager::copy(DirEntry entry) { return FileOperator::copy(entry.entry_path); }
-
-/**
- * @brief Navigate into a different directory, moving the workspace directory
- * @param target_dir The directory to mvoe into
- * @retval 0 on success, or negative FileOperator::OperatorError code on failure
- */
-int Manager::nav_into_dir(DirEntry target_dir) {
-  if (target_dir.getType() != DIRECTORY_ENTRY) {
-    return -E_INVALID_TYPE;
-  }
-
-  if (fs::exists(target_dir.getPath()) == false) {
-    return -E_INVALID_PATH;
-  }
-
-  // update the workspace path
-  this->workspace_path = target_dir.getPath();
-
-  // update the directory entry list
-  this->buildList();
-
-  return 0;
-}
-
-/**
- * @brief Navigate up one directory level, updating the workspace directory
- * @retval 0 on success, or negative FileOperator::OperatorError code on failure
- */
-int Manager::nav_out_of_dir(void) {
-  this->workspace_path = this->workspace_path.parent_path();
-
-  this->buildList();
-
-  return 0;
-}
