@@ -62,26 +62,36 @@ Interface::~Interface() {
   // delete the main window and stop cursess
   endwin();
 }
-/** @brief User feedback function which returns the 
+
+/** 
+ * @brief User feedback function which returns the 
  * feedback to the user based on the command
  */
-void Interface::show_user_feedback(Interface& screen, int command){
-  if(command == FileOperator::SUCCESS) {
-    screen.show_message("command completed successfully"); // if renamed successfully, show success message
-    screen.show_file_list(); // update the display interface
-    screen.show_path(); // show current path
-  } else if(command == -FileOperator::E_ITEM_DOES_NOT_EXIST) {
-    screen.show_error("selected operation cannot be performed on the current file/directory"); // if file/directory does not exist
-  } else if(command == -FileOperator::E_ITEM_EXISTS){
-    screen.show_error("another file/directory with new name exists"); // if new file name already exists in the database
-  } else if(command == -FileOperator::E_DIFFERENT_TYPES){
-    screen.show_error("invalid conversion requested"); // heuristic check
-  } else if(command == -FileOperator::E_INVALID_PATH){
-    screen.show_error("file/directory does not exist");
-  } else if(command == -FileOperator::E_INVALID_TYPE){
-    screen.show_error("selected object is not a directory");
-  } else {
-    screen.show_error("unknown error occured"); // default error message
+void Interface::show_user_feedback(int return_value){
+  switch (return_value) {
+    case FileOperator::SUCCESS:
+      this->show_message("command completed successfully"); // if renamed successfully, show success message
+      this->show_file_list(); // update the display interface
+      this->show_path(); // show current path
+      break;
+    case -FileOperator::E_ITEM_DOES_NOT_EXIST:
+      this->show_error("selected operation cannot be performed on the current file/directory"); // if file/directory does not exist
+      break;
+    case -FileOperator::E_ITEM_EXISTS:
+      this->show_error("file/directory already exists"); // if new file name already exists in the database
+      break;
+    case -FileOperator::E_DIFFERENT_TYPES:
+      this->show_error("invalid conversion requested"); // heuristic check
+      break;
+    case -FileOperator::E_INVALID_PATH:
+      this->show_error("file/directory does not exist");
+      break;
+    case -FileOperator::E_INVALID_TYPE:
+      this->show_error("selected object is not a directory");
+      break;
+    default:
+      this->show_error("unknown error occured"); // default error message
+      break;
   }
 }
 
@@ -113,7 +123,7 @@ void Interface::show_controls(bool copied) {
 
   // print the remaining controls
   wprintw(this->control_list_win,
-          " - Copy \n [P] - Paste      [ENTER] - Select Directory  [BKSP] - Previous Directory \n");
+          " - Copy \n [P] - Paste      [ENTER] - Select Directory  [BKSP] - Previous Directory  [Q] - Quit\n");
 
   // print the bottom border
   for (int i = 0; i < this->term_col - 2; i++) {
@@ -270,7 +280,7 @@ std::string Interface::ask_filename(void) {
   return std::string(response);
 }
 
-void Interface::show_path(void) { this->show_message(this->workspace_path.parent_path()); }
+void Interface::show_path(void) { this->show_message(this->workspace_path); }
 
 /**
  * @brief Show a message to the user

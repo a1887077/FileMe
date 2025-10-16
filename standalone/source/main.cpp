@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 
   interface.show_message("Welcome to FileMe.");
   // wait 500 milliseconds to allow a smoother user experience
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(750));
   // remove any messages (if any)
   interface.show_message(" ");
 
@@ -33,7 +33,8 @@ int main(int argc, char** argv) {
     int valid_list_entry = interface.get_highlighted(highlighted); // highlights the current file/directory for the user
 
     switch (command) {
-      case 'q': 
+      case 'q':
+      case 'Q':
       case KEY_EXIT:
         interface.show_message("Bye..."); // show the quit display message
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); 
@@ -72,7 +73,6 @@ int main(int argc, char** argv) {
         break;
 
       case KEY_BACKSPACE:
-        interface.show_message("leave directory"); // show display message to user
         interface.nav_out_of_dir(); // leave the current directory
         interface.show_file_list(); // update the interface display
         interface.show_path(); // show current path
@@ -80,35 +80,31 @@ int main(int argc, char** argv) {
 
       case 'n':
       case 'N':
-        interface.show_message("new file");
         new_filename = interface.ask_filename(); // prompt the user for a file name
-        interface.show_user_feedback(interface, interface.create(new_filename, FILE_ENTRY)); // operates the command and provides feedback to the user
+        interface.show_user_feedback(interface.create(new_filename, FILE_ENTRY)); // operates the command and provides feedback to the user
         break;
 
       case 'r':
       case 'R':
-        interface.show_message("rename file");
         new_filename = interface.ask_filename(); // promt the user for a new file name
-        interface.show_user_feedback(interface, interface.rename(highlighted, new_filename)); // operates the command and provides feedback to the user
+        interface.show_user_feedback(interface.rename(highlighted, new_filename)); // operates the command and provides feedback to the user
         break;
 
       case 'd':
       case 'D':
-        interface.show_message("delete file");
         userResponse = interface.ask_confirmation();
-        interface.show_user_feedback(interface, interface.remove(highlighted)); // run the deletion command and provide feedback to the user
+        interface.show_user_feedback(interface.remove(highlighted)); // run the deletion command and provide feedback to the user
 
         break;
 
       case 'c':
       case 'C':
         interface.show_message("copy file");
-        interface.show_user_feedback(interface, interface.copy(highlighted)); // run the copy command and provide user feedback
+        interface.show_user_feedback(interface.copy(highlighted)); // run the copy command and provide user feedback
         break;
 
       case 'p':
       case 'P':
-        interface.show_message("paste file");
         if(interface.paste() == FileOperator::SUCCESS){ // if item is pasted correctly
           interface.show_message("item pasted successfully"); // show success message
           interface.show_file_list(); // update display
