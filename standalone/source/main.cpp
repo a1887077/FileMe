@@ -32,6 +32,12 @@ int main(int argc, char** argv) {
     int command = interface.get_file_command(); // fetch's user inputs (key press or string inputs depending on the problem)
     int valid_list_entry = interface.get_highlighted(highlighted); // highlights the current file/directory for the user
 
+    // if the command is not a valid input when on [...], return an error
+    if(valid_list_entry == -1 && command != KEY_ENTER && command != 10 && command != KEY_BACKSPACE && command != KEY_DOWN && command != 'q'){ 
+      interface.show_error("Cannot perform selected operation on [...]"); // show error message to user
+      continue;
+    }
+
     switch (command) {
       case 'q':
       case 'Q':
