@@ -44,12 +44,14 @@ int main(int argc, char** argv) {
 
       case KEY_UP:
         interface.scroll_up(); // move the cursor up
+        interface.get_highlighted(highlighted); // update the highlighted item
         interface.show_message(highlighted.getPath()); // show message in display interface
         interface.show_file_list(); // update the display interface
         break;
 
       case KEY_DOWN:
         interface.scroll_down(); // move the cursor down
+        interface.get_highlighted(highlighted); // update the highlighted item
         interface.show_message(highlighted.getPath()); // show message in display interface
         interface.show_file_list(); // update the display interface
         break;

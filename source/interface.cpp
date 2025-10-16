@@ -70,7 +70,7 @@ Interface::~Interface() {
 void Interface::show_user_feedback(int return_value){
   switch (return_value) {
     case FileOperator::SUCCESS:
-      this->show_message("command completed successfully"); // if renamed successfully, show success message
+      this->show_message("command completed successfully"); // if successful, show success message
       this->show_file_list(); // update the display interface
       this->show_path(); // show current path
       break;
