@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <cctype>
-#include <string>
 #include <cstring>
+#include <string>
 
 /**
  * @brief A constructor for the interface class
@@ -84,9 +84,9 @@ void Interface::show_controls(bool copied) {
   if (copied) {
     wattron(this->control_list_win, A_REVERSE);
   }
-  wprintw(this->control_list_win, "[C]"); // print the [C] label
+  wprintw(this->control_list_win, "[C]");  // print the [C] label
   if (copied) {
-    wattroff(this->control_list_win, A_REVERSE); // disable highlighting
+    wattroff(this->control_list_win, A_REVERSE);  // disable highlighting
   }
 
   // print the remaining controls
@@ -112,21 +112,6 @@ void Interface::show_file_list(void) {
   // get the current list of files of the current working directory
   std::vector<DirEntry> entries = this->getEntries();
 
-  // sort the files alphabetically (as VS code displays it) 
-  std::sort(entries.begin(), entries.end(), [](DirEntry& a, DirEntry& b){
-    auto group = [](DirEntry& entry) {
-      // following syntax is used: return 0 represents dotfiles, return 1 represents directories, return 2 represents regular files
-      if(entry.getName().size() > 0 && entry.getName()[0] == '.'){return 0;} // check if the first character is a dot
-      if(entry.getType() == DIRECTORY_ENTRY) {return 1;} // check if the entry is a directory
-      return 2; // returns when a regular file
-    };
-    // group the values for both types
-    int first = group(a); 
-    int second = group(b);
-    if(first != second){return first < second;} // firstly sort group wise, (dotfiles -> directories -> files)
-    return strcasecmp(a.getName().c_str(), b.getName().c_str()) < 0; // if same type of object, sort alphabetically (for both lower and upper case)
-  });
-
   // loop through each available slot in the file list
   for (int i = 0; i < this->list_entries; i++) {
     // calculate the index into the list of files
@@ -143,12 +128,13 @@ void Interface::show_file_list(void) {
     } else if (i == 0 && scroll_offset > 0) {
       // we have scrolled down, display a 'more contents' symbol
       wprintw(this->file_list_win, "   ...\n");
-    } else if (index - 1 < (int) this->numEntries() && i != this->list_entries - 1) {
+    } else if (index - 1 < (int)this->numEntries() && i != this->list_entries - 1) {
       // display a directory entry
       DirEntry entry = entries[index - 1];
-      char dirSeparator = entry.getType() == DIRECTORY_ENTRY ? '/' : ' '; // if the directory is a file or not
+      char dirSeparator
+          = entry.getType() == DIRECTORY_ENTRY ? '/' : ' ';  // if the directory is a file or not
       wprintw(this->file_list_win, "   %s%c\n", entry.getName().c_str(), dirSeparator);
-    } else if (index - 1 < (int) this->numEntries() && i == this->list_entries - 1) {
+    } else if (index - 1 < (int)this->numEntries() && i == this->list_entries - 1) {
       // we have scrolled up, display a 'more contents' symbol
       wprintw(this->file_list_win, "   ...\n");
     }
@@ -173,12 +159,14 @@ int Interface::get_file_command(void) { return wgetch(this->file_list_win); }
  * @brief Get the currently highlighted filentry
  * @retval A DirEntry object of the entry which is currently highlighted
  */
-DirEntry Interface::get_highlighted(void) {
+int Interface::get_highlighted(DirEntry &highlighted) {
   if (this->highlighted_item == 0) {
-    return DirEntry(fs::path(), "return", NULL_ENTRY);
+    return -1;
   }
 
-  return this->getEntries().at(this->highlighted_item-1);
+  highlighted = this->getEntries().at(this->highlighted_item - 1);
+
+  return 0;
 }
 
 /**
@@ -201,7 +189,7 @@ void Interface::scroll_up(void) {
  */
 void Interface::scroll_down(void) {
   // is it possible to scroll down
-  if (this->highlighted_item < (int) this->numEntries()) {
+  if (this->highlighted_item < (int)this->numEntries()) {
     this->highlighted_item++;
   }
 
@@ -222,11 +210,11 @@ bool Interface::ask_confirmation(void) {
   // c-style string to store the response from the user as required by curses
   char response[3];
 
-  echo(); // we want to see the input
-  wprintw(this->command_entry_win, "Do you confirm? [Y/N]: "); // prompt the user
-  wrefresh(this->command_entry_win); // display the prompt
-  wgetstr(this->command_entry_win, response); // wait for input
-  noecho(); // input received, turn off echo
+  echo();                                                          // we want to see the input
+  wprintw(this->command_entry_win, "   Do you confirm? [Y/N]: ");  // prompt the user
+  wrefresh(this->command_entry_win);                               // display the prompt
+  wgetstr(this->command_entry_win, response);                      // wait for input
+  noecho();                                                        // input received, turn off echo
 
   // convert the c-style string into a c++ string
   std::string response_string = std::string(response);
@@ -250,19 +238,17 @@ std::string Interface::ask_filename(void) {
   // c-style string to store the response from the user as required by curses
   char response[20];
 
-  echo(); // enable the user to be able to see their input
-  wprintw(this->command_entry_win, "   Enter a file name (max 20 char): "); // prompt the user
-  wrefresh(this->command_entry_win); // display the prompt
-  wgetstr(this->command_entry_win, response); // wait for a response from the user
-  noecho(); // input received, turn off echo
+  echo();  // enable the user to be able to see their input
+  wprintw(this->command_entry_win, "   Enter a file name (max 20 char): ");  // prompt the user
+  wrefresh(this->command_entry_win);                                         // display the prompt
+  wgetstr(this->command_entry_win, response);  // wait for a response from the user
+  noecho();                                    // input received, turn off echo
 
   // convert the c-style string to a c++ string and return it
   return std::string(response);
 }
 
-void Interface::show_path(void) {
-  this->show_message(this->workspace_path.parent_path());
-}
+void Interface::show_path(void) { this->show_message(this->workspace_path.parent_path()); }
 
 /**
  * @brief Show a message to the user
@@ -299,7 +285,6 @@ void Interface::show_error(std::string error) {
   wrefresh(this->command_entry_win);
 }
 
-
 /**
  * @brief Navigate into a different directory, moving the workspace directory
  * @param target_dir The directory to mvoe into
@@ -321,6 +306,7 @@ int Interface::nav_into_dir(DirEntry target_dir) {
 
   // update the directory entry list
   this->buildList();
+  this->sortList();
 
   return 0;
 }
@@ -335,6 +321,7 @@ int Interface::nav_out_of_dir(void) {
   this->highlighted_item = 0;
 
   this->buildList();
+  this->sortList();
 
   return 0;
 }

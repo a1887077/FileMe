@@ -23,12 +23,14 @@ int main(int argc, char** argv) {
 
   // declare variables used while performing commands
   bool quit = false; // when the user wants to quit
-  std::string new_filename; // string to store data whilst user attempts different commands
   bool userResponse = false; // to store user-based decisions
+  int return_code = 0;
+  DirEntry highlighted;
+  std::string new_filename; // string to store data whilst user attempts different commands
 
   while (quit == false) {
     int command = interface.get_file_command(); // fetch's user inputs (key press or string inputs depending on the problem)
-    DirEntry highlighted = interface.get_highlighted(); // highlights the current file/directory for the user
+    int valid_list_entry = interface.get_highlighted(highlighted); // highlights the current file/directory for the user
 
     switch (command) {
       case 'q': 
@@ -40,14 +42,14 @@ int main(int argc, char** argv) {
         break;
 
       case KEY_UP:
-        interface.show_message("scroll up"); // show message in display interface
         interface.scroll_up(); // move the cursor up
+        interface.show_message(highlighted.getPath()); // show message in display interface
         interface.show_file_list(); // update the display interface
         break;
 
       case KEY_DOWN:
-        interface.show_message("scroll down"); // show message in display interface
         interface.scroll_down(); // move the cursor down
+        interface.show_message(highlighted.getPath()); // show message in display interface
         interface.show_file_list(); // update the display interface
         break;
 
@@ -55,11 +57,11 @@ int main(int argc, char** argv) {
       case KEY_ENTER:
         interface.show_message("enter directory"); // show message when entering directory
 
-        if (highlighted.getType() == DIRECTORY_ENTRY) { // if the selected object is a directory
+        if (highlighted.getType() == DIRECTORY_ENTRY && valid_list_entry == 0) { // if the selected object is a directory
           interface.nav_into_dir(highlighted);  // enter the directory
           interface.show_file_list(); // update the display interface
           interface.show_path(); // show current path
-        } else if (highlighted.getType() == NULL_ENTRY && highlighted.getName() == "return") { // if the current object is [...] (at the top)
+        } else if (valid_list_entry == -1) { // if the current object is [...] (at the top)
           interface.nav_out_of_dir(); // leave the directory
           interface.show_file_list(); // update the display interface
           interface.show_path(); // show current path
@@ -83,8 +85,7 @@ int main(int argc, char** argv) {
         if (interface.create(new_filename, FILE_ENTRY) == FileOperator::SUCCESS) {
           interface.show_message("file created successfully"); // show success message to user
           interface.show_file_list(); // update the display interface
-          interface.show_path(); // show current path
-        } else if(interface.create(new_filename, FILE_ENTRY) == FileOperator::E_ITEM_EXISTS) {
+        } else if(interface.create(new_filename, FILE_ENTRY) == -FileOperator::E_ITEM_EXISTS) {
           interface.show_error("file already exists"); // if file already exists in the database
         } else {
           interface.show_error("unknown error occured"); // default error message
@@ -99,12 +100,11 @@ int main(int argc, char** argv) {
         if (interface.rename(highlighted, new_filename) == FileOperator::SUCCESS) {
           interface.show_message("file renamed successfully"); // if renamed successfully, show success message
           interface.show_file_list(); // update the display interface
-          interface.show_path(); // show current path
-        } else if(interface.rename(highlighted, new_filename) == FileOperator::E_ITEM_DOES_NOT_EXIST) {
+        } else if(interface.rename(highlighted, new_filename) == -FileOperator::E_ITEM_DOES_NOT_EXIST) {
           interface.show_error("cannot rename currently selected object"); // current item cannot be renamed
-        } else if(interface.rename(highlighted, new_filename) == FileOperator::E_ITEM_EXISTS){
+        } else if(interface.rename(highlighted, new_filename) == -FileOperator::E_ITEM_EXISTS){
           interface.show_error("another file with new name exists"); // if new file name already exists in the database
-        } else if(interface.rename(highlighted, new_filename) == FileOperator::E_DIFFERENT_TYPES){
+        } else if(interface.rename(highlighted, new_filename) == -FileOperator::E_DIFFERENT_TYPES){
           interface.show_error("invalid conversion requested"); // heuristic check
         } else {
           interface.show_error("unknown error occured"); // default error message
@@ -119,8 +119,7 @@ int main(int argc, char** argv) {
         if(userResponse && interface.remove(highlighted) == FileOperator::SUCCESS){ // if the user confirms [Y] and deletion is a success
           interface.show_message("file deleted successfully"); // show success message
           interface.show_file_list(); // update the display interface
-          interface.show_path(); // show current path
-        } else if(userResponse && interface.remove(highlighted) == FileOperator::E_ITEM_DOES_NOT_EXIST){
+        } else if(userResponse && interface.remove(highlighted) == -FileOperator::E_ITEM_DOES_NOT_EXIST){
           interface.show_error("object to remove does not exist"); // error when object does not exist
         } else {
           interface.show_error("unknown error occured"); // default error message
@@ -139,7 +138,6 @@ int main(int argc, char** argv) {
           interface.show_error("unknown error occured"); // default error message
         }
 
-
         break;
 
       case 'p':
@@ -149,10 +147,13 @@ int main(int argc, char** argv) {
           interface.show_message("item pasted successfully"); // show success message
           interface.show_file_list(); // update display
           interface.show_path(); // show current path
-        } else if(interface.paste() == FileOperator::E_ITEM_DOES_NOT_EXIST){
+        } else if(interface.paste() == -FileOperator::E_ITEM_DOES_NOT_EXIST){
           interface.show_error("no object copied"); // if user tries to paste without copying
-        } else if(interface.paste() == FileOperator::E_ITEM_EXISTS){
+        } else if(interface.paste() == -FileOperator::E_ITEM_EXISTS){
           interface.show_error("object already exists"); // if object already exists
+          new_filename = interface.ask_filename();
+          interface.paste(new_filename);
+          interface.show_file_list(); // update display
         } else {
           interface.show_error("unknown error occured"); // default error message
         }

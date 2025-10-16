@@ -1,5 +1,8 @@
 #include <fileme/manager.h>
 
+#include <algorithm>
+#include <cstring>
+
 /**
  * @brief Construct a list of files in the current workspace directory
  */
@@ -15,6 +18,31 @@ void Manager::buildList(void) {
   }
 }
 
+void Manager::sortList(void) {
+  // sort the files alphabetically (as VS code displays it)
+  std::sort(this->entry_list.begin(), this->entry_list.end(), [](DirEntry& a, DirEntry& b) {
+    auto group = [](DirEntry& entry) {
+      // following syntax is used: return 0 represents dotfiles, return 1 represents directories,
+      // return 2 represents regular files
+      if (entry.getName().size() > 0 && entry.getName()[0] == '.') {
+        return 0;
+      }  // check if the first character is a dot
+      if (entry.getType() == DIRECTORY_ENTRY) {
+        return 1;
+      }  // check if the entry is a directory
+      return 2;  // returns when a regular file
+    };
+    // group the values for both types
+    int first = group(a);
+    int second = group(b);
+    if (first != second) {
+      return first < second;
+    }  // firstly sort group wise, (dotfiles -> directories -> files)
+    return strcasecmp(a.getName().c_str(), b.getName().c_str())
+           < 0;  // if same type of object, sort alphabetically (for both lower and upper case)
+  });
+}
+
 /**
  * @brief Construct a Manager given a workspace directory
  * @param _workspace_path The desired workspace path
@@ -23,6 +51,7 @@ Manager::Manager(fs::path _workspace_path) {
   this->workspace_path = _workspace_path;
 
   this->buildList();
+  this->sortList();
 }
 
 /**
@@ -47,6 +76,7 @@ int Manager::remove(DirEntry entry) {
   ret = FileOperator::remove(entry.entry_path);
 
   this->buildList();
+  this->sortList();
 
   return ret;
 }
@@ -65,6 +95,7 @@ int Manager::create(std::string name, DirEntryType type) {
 
   if (ret == 0) {
     this->entry_list.emplace_back(new_item_path, name, type);
+    this->sortList();
   }
 
   return ret;
@@ -76,7 +107,7 @@ int Manager::create(std::string name, DirEntryType type) {
  * @param new_name The new name of the DirEntry
  * @retval 0 on success, or negative FileOperator::OperatorError code on failure
  */
-int Manager::rename(DirEntry &entry, std::string new_name) {
+int Manager::rename(DirEntry& entry, std::string new_name) {
   fs::path old_path = entry.entry_path;
   fs::path new_path = entry.entry_path.replace_filename(new_name);
 
@@ -86,6 +117,8 @@ int Manager::rename(DirEntry &entry, std::string new_name) {
   if (ret == 0) {
     entry.entry_name = new_name;
     entry.entry_path = new_path;
+    this->buildList();
+    this->sortList();
   }
 
   return ret;
@@ -103,7 +136,17 @@ int Manager::copy(DirEntry entry) { return FileOperator::copy(entry.entry_path);
  * @param new_name The new name of the pasted DirEntry item
  * @retval 0 on success, or negative FileOperator::OperatorError code on failure
  */
-int paste(std::string new_name) {
+int Manager::paste(std::string new_name) {
+  fs::path new_path = this->workspace_path / new_name;
+
+  int ret = 0;
+  ret = FileOperator::paste(new_path);
+
+  if (ret == 0) {
+    this->buildList();
+    this->sortList();
+  }
+
   return 0;
 }
 
@@ -114,5 +157,13 @@ int paste(std::string new_name) {
 int Manager::paste(void) {
   fs::path filename = this->copy_path.filename();
 
-  return FileOperator::paste(this->workspace_path / filename);
+  int ret = 0;
+  ret = FileOperator::paste(this->workspace_path / filename);
+
+  if (ret == 0) {
+    this->buildList();
+    this->sortList();
+  }
+
+  return ret;
 }

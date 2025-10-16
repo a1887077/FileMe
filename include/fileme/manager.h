@@ -18,11 +18,12 @@ private:
   // the path of the workspace in which the manager is working
   // a list of DirEntries in the current workspace
   std::vector<DirEntry> entry_list;
-  
+
 protected:
   void buildList(void);
-  
-  public:
+  void sortList(void);
+
+public:
   fs::path workspace_path;
   Manager(fs::path _workspace_path);
   Manager() : Manager(fs::current_path()) {};

@@ -32,7 +32,7 @@ public:
 
   // functions related to the list of files
   void show_file_list(void);
-  DirEntry get_highlighted(void);
+  int get_highlighted(DirEntry &highlighted);
   int get_file_command(void);
   void scroll_up(void);
   void scroll_down(void);
@@ -58,4 +58,4 @@ public:
   int nav_out_of_dir(void);
 };
 
-#endif // INTERFACE_H
+#endif  // INTERFACE_H
