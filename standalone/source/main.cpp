@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
   Interface interface; // create the instance of the display interface
 
   interface.show_message("Welcome to FileMe.");
-  // wait 500 milliseconds to allow a smoother user experience
+  // wait 750 milliseconds to allow a smoother user experience
   std::this_thread::sleep_for(std::chrono::milliseconds(750));
   // remove any messages (if any)
   interface.show_message(" ");
