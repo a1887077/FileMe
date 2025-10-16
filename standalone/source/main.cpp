@@ -82,62 +82,28 @@ int main(int argc, char** argv) {
       case 'N':
         interface.show_message("new file");
         new_filename = interface.ask_filename(); // prompt the user for a file name
-        if (interface.create(new_filename, FILE_ENTRY) == FileOperator::SUCCESS) {
-          interface.show_message("file created successfully"); // show success message to user
-          interface.show_file_list(); // update the display interface
-        } else if(interface.create(new_filename, FILE_ENTRY) == -FileOperator::E_ITEM_EXISTS) {
-          interface.show_error("file already exists"); // if file already exists in the database
-        } else {
-          interface.show_error("unknown error occured"); // default error message
-        }
-
+        interface.show_user_feedback(interface, interface.create(new_filename, FILE_ENTRY)); // operates the command and provides feedback to the user
         break;
 
       case 'r':
       case 'R':
         interface.show_message("rename file");
         new_filename = interface.ask_filename(); // promt the user for a new file name
-        if (interface.rename(highlighted, new_filename) == FileOperator::SUCCESS) {
-          interface.show_message("file renamed successfully"); // if renamed successfully, show success message
-          interface.show_file_list(); // update the display interface
-        } else if(interface.rename(highlighted, new_filename) == -FileOperator::E_ITEM_DOES_NOT_EXIST) {
-          interface.show_error("cannot rename currently selected object"); // current item cannot be renamed
-        } else if(interface.rename(highlighted, new_filename) == -FileOperator::E_ITEM_EXISTS){
-          interface.show_error("another file with new name exists"); // if new file name already exists in the database
-        } else if(interface.rename(highlighted, new_filename) == -FileOperator::E_DIFFERENT_TYPES){
-          interface.show_error("invalid conversion requested"); // heuristic check
-        } else {
-          interface.show_error("unknown error occured"); // default error message
-        }
-
+        interface.show_user_feedback(interface, interface.rename(highlighted, new_filename)); // operates the command and provides feedback to the user
         break;
 
       case 'd':
       case 'D':
         interface.show_message("delete file");
         userResponse = interface.ask_confirmation();
-        if(userResponse && interface.remove(highlighted) == FileOperator::SUCCESS){ // if the user confirms [Y] and deletion is a success
-          interface.show_message("file deleted successfully"); // show success message
-          interface.show_file_list(); // update the display interface
-        } else if(userResponse && interface.remove(highlighted) == -FileOperator::E_ITEM_DOES_NOT_EXIST){
-          interface.show_error("object to remove does not exist"); // error when object does not exist
-        } else {
-          interface.show_error("unknown error occured"); // default error message
-        }
+        interface.show_user_feedback(interface, interface.remove(highlighted)); // run the deletion command and provide feedback to the user
 
         break;
 
       case 'c':
       case 'C':
         interface.show_message("copy file");
-        if(interface.copy(highlighted) == FileOperator::SUCCESS){ // if item is copied successfully
-          interface.show_message("item copied successfully"); // show success message
-          interface.show_file_list(); // update display interface
-          interface.show_path(); // show current path
-        } else {
-          interface.show_error("unknown error occured"); // default error message
-        }
-
+        interface.show_user_feedback(interface, interface.copy(highlighted)); // run the copy command and provide user feedback
         break;
 
       case 'p':

@@ -43,6 +43,7 @@ public:
   void show_path(void);
   void show_message(std::string message);
   void show_error(std::string error);
+  void show_user_feedback(Interface& screen, int command);
 
   /**
    * @brief Navigate into a different directory, moving the workspace directory

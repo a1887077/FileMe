@@ -62,6 +62,28 @@ Interface::~Interface() {
   // delete the main window and stop cursess
   endwin();
 }
+/** @brief User feedback function which returns the 
+ * feedback to the user based on the command
+ */
+void Interface::show_user_feedback(Interface& screen, int command){
+  if(command == FileOperator::SUCCESS) {
+    screen.show_message("command completed successfully"); // if renamed successfully, show success message
+    screen.show_file_list(); // update the display interface
+    screen.show_path(); // show current path
+  } else if(command == -FileOperator::E_ITEM_DOES_NOT_EXIST) {
+    screen.show_error("selected operation cannot be performed on the current file/directory"); // if file/directory does not exist
+  } else if(command == -FileOperator::E_ITEM_EXISTS){
+    screen.show_error("another file/directory with new name exists"); // if new file name already exists in the database
+  } else if(command == -FileOperator::E_DIFFERENT_TYPES){
+    screen.show_error("invalid conversion requested"); // heuristic check
+  } else if(command == -FileOperator::E_INVALID_PATH){
+    screen.show_error("file/directory does not exist");
+  } else if(command == -FileOperator::E_INVALID_TYPE){
+    screen.show_error("selected object is not a directory");
+  } else {
+    screen.show_error("unknown error occured"); // default error message
+  }
+}
 
 /**
  * @brief Render the list of controls to the control list window
