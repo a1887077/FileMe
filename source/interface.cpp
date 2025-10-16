@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cctype>
 #include <string>
+#include <cstring>
 
 /**
  * @brief A constructor for the interface class
@@ -110,6 +111,21 @@ void Interface::show_file_list(void) {
 
   // get the current list of files of the current working directory
   std::vector<DirEntry> entries = this->getEntries();
+
+  // sort the files alphabetically (as VS code displays it) 
+  std::sort(entries.begin(), entries.end(), [](DirEntry& a, DirEntry& b){
+    auto group = [](DirEntry& entry) {
+      // following syntax is used: return 0 represents dotfiles, return 1 represents directories, return 2 represents regular files
+      if(entry.getName().size() > 0 && entry.getName()[0] == '.'){return 0;} // check if the first character is a dot
+      if(entry.getType() == DIRECTORY_ENTRY) {return 1;} // check if the entry is a directory
+      return 2; // returns when a regular file
+    };
+    // group the values for both types
+    int first = group(a); 
+    int second = group(b);
+    if(first != second){return first < second;} // firstly sort group wise, (dotfiles -> directories -> files)
+    return strcasecmp(a.getName().c_str(), b.getName().c_str()) < 0; // if same type of object, sort alphabetically (for both lower and upper case)
+  });
 
   // loop through each available slot in the file list
   for (int i = 0; i < this->list_entries; i++) {
