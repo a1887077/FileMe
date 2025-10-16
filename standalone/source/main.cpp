@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
   while (quit == false) {
     int command = interface.get_file_command();
     DirEntry highlighted = interface.get_highlighted();
-
+    int status = -1;
     switch (command) {
       case 'q': 
       case KEY_EXIT:
@@ -67,17 +67,29 @@ int main(int argc, char** argv) {
 
       case 'n':
       case 'N':
-        interface.show_message("new file");
+        interface.show_message(std::to_string(interface.numEntries()));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         new_filename = interface.ask_filename();
-        interface.create(new_filename, FILE_ENTRY);
-        interface.show_file_list();
+        status = interface.create(new_filename, FILE_ENTRY);
+        if(status == 0){
+          interface.show_message("file created");
+          interface.show_file_list();
+        } else {
+          interface.show_error("error occured while creating file, please try again");
+        }  
+        interface.show_file_list();      
+        interface.show_message(std::to_string(interface.numEntries()));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(500));
         
         break;
 
       case 'r':
       case 'R':
         interface.show_message("rename file");
-        interface.ask_filename();
+        new_filename = interface.ask_filename();
+             
+        status = interface.rename(highlighted,new_filename);
+        interface.show_file_list();
         break;
 
       case 'd':
