@@ -127,12 +127,12 @@ void Interface::show_file_list(void) {
     } else if (i == 0 && scroll_offset > 0) {
       // we have scrolled down, display a 'more contents' symbol
       wprintw(this->file_list_win, "   ...\n");
-    } else if (index - 1 < (int) entries.size() && i != this->list_entries - 1) {
+    } else if (index - 1 < (int) this->numEntries() && i != this->list_entries - 1) {
       // display a directory entry
       DirEntry entry = entries[index - 1];
       char dirSeparator = entry.getType() == DIRECTORY_ENTRY ? '/' : ' '; // if the directory is a file or not
       wprintw(this->file_list_win, "   %s%c\n", entry.getName().c_str(), dirSeparator);
-    } else if (index - 1 < (int) entries.size() && i == this->list_entries - 1) {
+    } else if (index - 1 < (int) this->numEntries() && i == this->list_entries - 1) {
       // we have scrolled up, display a 'more contents' symbol
       wprintw(this->file_list_win, "   ...\n");
     }
@@ -159,7 +159,7 @@ int Interface::get_file_command(void) { return wgetch(this->file_list_win); }
  */
 DirEntry Interface::get_highlighted(void) {
   if (this->highlighted_item == 0) {
-    return DirEntry();
+    return DirEntry(fs::path(), "return", NULL_ENTRY);
   }
 
   return this->getEntries().at(this->highlighted_item-1);
@@ -175,7 +175,7 @@ void Interface::scroll_up(void) {
   }
 
   // will the cursor scroll outside of visible bounds
-  if (this->highlighted_item < this->scroll_offset) {
+  if (this->highlighted_item <= this->scroll_offset && this->scroll_offset > 0) {
     this->scroll_offset--;
   }
 }
@@ -190,7 +190,7 @@ void Interface::scroll_down(void) {
   }
 
   // will the cursor scroll outside of visible bounds
-  if (this->highlighted_item > this->list_entries + this->scroll_offset - 1) {
+  if (this->highlighted_item >= this->list_entries + this->scroll_offset - 1) {
     this->scroll_offset++;
   }
 }

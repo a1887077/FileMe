@@ -1,5 +1,6 @@
 #include <curses.h>
 #include <fileme/interface.h>
+#include <fileme/fileOperator.h>
 
 #include <chrono>
 #include <string>
@@ -46,10 +47,12 @@ int main(int argc, char** argv) {
       case KEY_ENTER:
         interface.show_message("enter directory");
 
-        /* TBC: handle case when at index 0 ([..]) */
-
         if (highlighted.getType() == DIRECTORY_ENTRY) {
           interface.nav_into_dir(highlighted);
+          interface.show_file_list();
+          interface.show_path();
+        } else if (highlighted.getType() == NULL_ENTRY && highlighted.getName() == "return") {
+          interface.nav_out_of_dir();
           interface.show_file_list();
           interface.show_path();
         } else {
@@ -67,17 +70,22 @@ int main(int argc, char** argv) {
 
       case 'n':
       case 'N':
-        interface.show_message("new file");
         new_filename = interface.ask_filename();
-        interface.create(new_filename, FILE_ENTRY);
-        interface.show_file_list();
-        
+        if (interface.create(new_filename, FILE_ENTRY) == FileOperator::SUCCESS) {
+          interface.show_message("file created successfully");
+          interface.show_file_list();
+        } else { // todo: unique error messages?
+          interface.show_error("Could not create file");
+        }
+
         break;
 
       case 'r':
       case 'R':
         interface.show_message("rename file");
-        interface.ask_filename();
+        new_filename = interface.ask_filename();
+
+
         break;
 
       case 'd':

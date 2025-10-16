@@ -60,7 +60,7 @@ protected:
    * @param new_name The new name of the DirEntry
    * @retval 0 on success, or negative FileOperator::OperatorError code on failure
    */
-  int rename(DirEntry& entry, std::string new_name);
+  int rename(DirEntry &entry, std::string new_name);
 
   /**
    * @brief Select a DirEntry to be copied

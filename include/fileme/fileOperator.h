@@ -9,7 +9,7 @@ namespace fs = std::filesystem;
  * @brief A class to handle operations on files or directories
  */
 class FileOperator {
-private:
+protected:
   // the path of the currently copied file object, if available
   fs::path copy_path;
 

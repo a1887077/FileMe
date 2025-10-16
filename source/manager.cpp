@@ -76,7 +76,7 @@ int Manager::create(std::string name, DirEntryType type) {
  * @param new_name The new name of the DirEntry
  * @retval 0 on success, or negative FileOperator::OperatorError code on failure
  */
-int Manager::rename(DirEntry& entry, std::string new_name) {
+int Manager::rename(DirEntry &entry, std::string new_name) {
   fs::path old_path = entry.entry_path;
   fs::path new_path = entry.entry_path.replace_filename(new_name);
 
@@ -97,3 +97,22 @@ int Manager::rename(DirEntry& entry, std::string new_name) {
  * @retval 0 on success, or negative FileOperator::OperatorError code on failure
  */
 int Manager::copy(DirEntry entry) { return FileOperator::copy(entry.entry_path); }
+
+/**
+ * @brief Paste the selected DirEntry object into the current working directory with a new name
+ * @param new_name The new name of the pasted DirEntry item
+ * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+ */
+int paste(std::string new_name) {
+  return 0;
+}
+
+/**
+ * @brief Paste the selected DirEntry object into the current working directory
+ * @retval 0 on success, or negative FileOperator::OperatorError code on failure
+ */
+int Manager::paste(void) {
+  fs::path filename = this->copy_path.filename();
+
+  return FileOperator::paste(this->workspace_path / filename);
+}
