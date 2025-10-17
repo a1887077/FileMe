@@ -4,20 +4,8 @@
 #include <cstring>
 
 /**
- * @brief Construct a list of files in the current workspace directory
+ * @brief Sort the list of directory entries in a similar manner to the VSCode file bar
  */
-void Manager::buildList(void) {
-  this->entry_list.clear();
-  auto dir_iter = fs::directory_iterator(this->workspace_path);
-
-  for (auto dir_item : dir_iter) {
-    fs::path item_path = dir_item.path();
-    std::string item_name = item_path.filename();
-    DirEntryType item_type = dir_item.is_directory() ? DIRECTORY_ENTRY : FILE_ENTRY;
-    this->entry_list.emplace_back(item_path, item_name, item_type);
-  }
-}
-
 void Manager::sortList(void) {
   // sort the files alphabetically (as VS code displays it)
   std::sort(this->entry_list.begin(), this->entry_list.end(), [](DirEntry& a, DirEntry& b) {
@@ -44,6 +32,28 @@ void Manager::sortList(void) {
 }
 
 /**
+ * @brief Construct a list of files in the current workspace directory
+ */
+void Manager::buildList(void) {
+  // remove any previous entries from the list
+  this->entry_list.clear();
+  auto dir_iter = fs::directory_iterator(this->workspace_path);
+
+  // iterate through each entry in the current directory
+  for (auto dir_item : dir_iter) {
+    // construct the information needed for a directory entry
+    fs::path item_path = dir_item.path();
+    std::string item_name = item_path.filename();
+    DirEntryType item_type = dir_item.is_directory() ? DIRECTORY_ENTRY : FILE_ENTRY;
+
+    // add the entry into the list
+    this->entry_list.emplace_back(item_path, item_name, item_type);
+  }
+
+  this->sortList();
+}
+
+/**
  * @brief Construct a Manager given a workspace directory
  * @param _workspace_path The desired workspace path
  */
@@ -51,7 +61,6 @@ Manager::Manager(fs::path _workspace_path) {
   this->workspace_path = _workspace_path;
 
   this->buildList();
-  this->sortList();
 }
 
 /**
@@ -76,7 +85,6 @@ int Manager::remove(DirEntry entry) {
   ret = FileOperator::remove(entry.entry_path);
 
   this->buildList();
-  this->sortList();
 
   return ret;
 }
@@ -118,7 +126,6 @@ int Manager::rename(DirEntry& entry, std::string new_name) {
     entry.entry_name = new_name;
     entry.entry_path = new_path;
     this->buildList();
-    this->sortList();
   }
 
   return ret;
@@ -144,7 +151,6 @@ int Manager::paste(std::string new_name) {
 
   if (ret == 0) {
     this->buildList();
-    this->sortList();
   }
 
   return 0;
@@ -162,7 +168,6 @@ int Manager::paste(void) {
 
   if (ret == 0) {
     this->buildList();
-    this->sortList();
   }
 
   return ret;

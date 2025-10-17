@@ -41,7 +41,7 @@ Interface::Interface() {
 
   // configure the file list window and render it's initial state
   keypad(this->file_list_win, TRUE);
-  this->show_file_list();
+  this->update_file_list();
 }
 
 /**
@@ -71,7 +71,7 @@ void Interface::show_user_feedback(int return_value){
   switch (return_value) {
     case FileOperator::SUCCESS:
       this->show_message("command completed successfully"); // if successful, show success message
-      this->show_file_list(); // update the display interface
+      this->update_file_list(); // update the display interface
       this->show_path(); // show current path
       break;
     case -FileOperator::E_ITEM_DOES_NOT_EXIST:
@@ -137,7 +137,7 @@ void Interface::show_controls(bool copied) {
 /**
  * @brief render the list of files in the current directory
  */
-void Interface::show_file_list(void) {
+void Interface::update_file_list(void) {
   // clear the file list contents
   wclear(this->file_list_win);
 
@@ -338,9 +338,8 @@ int Interface::nav_into_dir(DirEntry target_dir) {
 
   // update the directory entry list
   this->buildList();
-  this->sortList();
 
-  return 0;
+  return SUCCESS;
 }
 
 /**
@@ -353,7 +352,25 @@ int Interface::nav_out_of_dir(void) {
   this->highlighted_item = 0;
 
   this->buildList();
-  this->sortList();
 
-  return 0;
+  return SUCCESS;
+}
+
+/**
+ * @brief Navigate into a directory given a path
+ */
+int Interface::nav_to_dir(fs::path desired_path) {
+  if (!fs::exists(desired_path)) {
+    return -E_ITEM_DOES_NOT_EXIST;
+  } else if (!fs::is_directory(desired_path)) {
+    return -E_INVALID_PATH;
+  }
+  
+  this->workspace_path = desired_path;
+  this->scroll_offset = 0;
+  this->highlighted_item = 0;
+
+  this->buildList();
+
+  return SUCCESS;
 }

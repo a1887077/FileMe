@@ -31,7 +31,7 @@ public:
   void show_controls(bool copied);
 
   // functions related to the list of files
-  void show_file_list(void);
+  void update_file_list(void);
   int get_highlighted(DirEntry &highlighted);
   int get_file_command(void);
   void scroll_up(void);
@@ -57,6 +57,8 @@ public:
    * @retval 0 on success, or negative FileOperator::OperatorError code on failure
    */
   int nav_out_of_dir(void);
+
+  int nav_to_dir(fs::path desired_path);
 };
 
 #endif  // INTERFACE_H

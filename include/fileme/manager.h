@@ -19,12 +19,20 @@ private:
   // a list of DirEntries in the current workspace
   std::vector<DirEntry> entry_list;
 
-protected:
-  void buildList(void);
+  /**
+   * @brief Sort the list of directory entries in a similar manner to the VSCode file bar
+   */
   void sortList(void);
 
-public:
+protected:
   fs::path workspace_path;
+
+  /**
+   * @brief Construct a list of files in the current workspace directory
+   */
+  void buildList(void);
+
+public:
   Manager(fs::path _workspace_path);
   Manager() : Manager(fs::current_path()) {};
 
