@@ -1,0 +1,16 @@
+This text describes how and why the testing for the whole project was done.
+
+Testing of the whole project was performed on a system to ensure the program is working as expected. This is essential as testing of each module was done independently
+however, testing that integration of these modules works as expected is also required. checking if back-end private variables flow information correctly to the 
+user interface and display correct information to the user, different modules can work coherently with each other without causing data loss or unexpected behaviour. 
+Furthermore, testing the whole program is important as this is what the user will experience. so testing for any bugs, unexpected errors, program failing at some stages, 
+etc. is essential as these things lower the user experience which is not ideal. To have an optimal and user friendly experience, testing of the whole project was necessary. 
+
+To test the whole project, the program was simply ran using 'make run' and each command provided to the user was tested. these include, making a new file, renaming a file, 
+deleting a file, copying a file or directory and pasting a file or directory. as expected, there were a few errors at first when testing these functions. for example, when 
+renaming a file, the file would rename however, the user display would not update. similarly, when pasting a file, the paste function would happen but the user would not get
+notified or visually see the updates. as the user scrolls the files, the user interface displays the current file path. this was not updated and showed the file path for 
+the previously selected file. After testing each command, testing of each error was done to ensure the user feedback is accurate and not misleading. Luckily, when testing
+the errors, there were no unexpected behaviours found. Some commands have a user validation which was also testing in each case to ensure any decision made by the user results
+in an expected behaviour. Testing the whole project displayed all the minor issues with the program and these issues were then fixed. to update the user interface, correct logic was implemented and updating
+the display was done right after a alteration of file/directory was made. This ensured the user was visually seeing what was accurate and correct.  

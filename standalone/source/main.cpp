@@ -6,10 +6,6 @@
 #include <string>
 #include <thread>
 
-// TODO:
-// 1) display doesnt update after rename, paste (rename happens, but file name doesnt change unless you go into another directory and come back)
-// 2) update so it doesnt take commands at the [...] at the top (it lets you do it but obv nothing happens and error is thrown)
-
 // a1885288: Varad Sharma, a1887077: Aidan Matthews
 // main file for the fileMe program
 int main(int argc, char** argv) {

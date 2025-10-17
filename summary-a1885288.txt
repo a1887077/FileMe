@@ -1,0 +1,26 @@
+a1885288 - Varad Sharma (Code quality project Reflection)
+
+In the project, I was responsible for developing the main file, ensuring navigation and expected behaviour, coding functions related to the user interface, 
+and testing the whole program after its completion. Aidan worked on backend development, implementing core functionalities that are avaiable for the user and 
+managing data flow between different classes, relationship between these classes. He also performed testing on indivisual classes to ensure each function is working as expected. 
+Aidan also creating files to enhance user experience such as Makefile and README files. In the end, after the basics of the program were implemented, we worked together to identify bugs, 
+unexpected behaviours, and validation of the code/program. 
+
+Initially, we sought out for libraries in c++/c that help us with our chosen topic. These were essential as they were the back-bone of our program and functions we wanted
+to create. Afterwards, using these libraries, we created functions that performed all the commands we initially proposed. Whilst creating these functions, testing of each 
+function was also done to ensure they were working as intended. Then all these functions were put together into a interface for the user to experience. This caused some issues 
+at the start since we are combining all functions together. This was however fixed using testing and a efficeint and accurate user interface was created. afterwards, testing the 
+whole program thoroughly to ensure in all situations, the program responded as expected. After that, we worked on enhancing the user experience such as displaying files
+in alphabetical order, displaying all directories together and all files together, etc. (minor details to further enchance user experience).
+
+This project enchanced my knowledge on new libraries, user interfaces, and testing. Furthermore, working with Aidan, I improved my coding skills and writing cleaner efficient code. 
+I also learned system level interactions, effective collaboration, and efficient teamwork. I had a similar experience in a project I completed in another course, so 
+new things to learn were quite minimal, however, applying the things I learnt from the prior project such as an initial plan, effective communication, assigned duties etc. assisted
+a lot in this project and allowed it to flow smoothly. I also learned the importance of testing before and after the project since this allowed us to locate errors we were not
+able to see initially. 
+
+What worked well is that we had a plan from the start and we followed that plan throughout the timespan of the project. This made sure we had enough time to change things if required
+and adjust the code accordingly. Furthermore, each person fulfulled their assigned duties, ensuring that tasks were completed on time and there was no need for follow-ups or 
+compensating anothers work. we had great communication between us which allowed each member to be on the same page as others and ensured no one was left behind. Even though 
+there isn't much to improve upon since, we could always have better time management, for example working in the holidays, set weekly goals etc. Though this was not required for us
+since our plan incorporated tasks urgency rather than time urgency. 
