@@ -4,8 +4,7 @@ The following illustrates how to use the FileMe program. This is known to be wor
 
 **IMPORTANT NOTE**: There is no way to undo a command!! This means that any **deletion is permanent**! While you will be asked to confirm your action when trying to delete a file, **please be careful**!
 
-
-Once built, the executable will be placed in the `build/standalone` directory. For building instructions please refer to the (README)[../README.md].
+Once built, the executable will be placed in the `build/standalone` directory. For building instructions please refer to the [README](../README.md).
 
 The program can be run as follows from the `standalone` directory.
 ```bash

@@ -84,7 +84,9 @@ int Manager::remove(DirEntry entry) {
   int ret = 0;
   ret = FileOperator::remove(entry.entry_path);
 
-  this->buildList();
+  if (ret == 0) {
+    this->buildList();
+  }
 
   return ret;
 }

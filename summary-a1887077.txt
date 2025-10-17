@@ -1,0 +1,28 @@
+Code Quality Project Reflection - FileMe File Manager
+Aidan Matthews a1887077
+
+This project has been of great value to me in revising and learning about modular application design and
+development between C and C++ environments, in addition to helping to refresh my CMake skills. My main
+focus during this assignment has been in the development of the backend modules used to perform filesystem
+manipulations as contained within the fileOperator and manager classes. Specifically, these classes are segmented
+such that the fileOperator is performing raw operations via the C++ filesystem library, taking file/directory
+paths as arguments. On the other hand, the manager class performs the same operations (using the functions
+provided by fileOperator), providing a level of abstraction to be able to operate using DirEntry objects,
+which are a class used to store records of the file objects in a given directory.
+
+Throughout the development of these classes, I have been focused on input validation and testing such that
+undefined or unwanted behaviour is prevented or minimised as much as possible. This included defining an
+enumeration to store different error codes, which is used throughout the application to increase
+consistency. Unit tests were written via doctest to provide automated indication of the behaviour
+of the code, which was extremely useful in limiting the number of bugs encountered during development 
+of subsequent components of the program.
+
+The final more collaborative element of my contribution to this project was in the user interface, developing
+methods to allow for the invokation of the backend functions which I had previously made. During this process
+the interplay between the ncurses library (which is a C library) and the C++ classes took some getting used
+to, though I feel that in the end the chosen implementation is fairly reliable. I took some time to plan out
+the requirements of the UI (shown in ui-mock.md), which greatly helped during implementation, especially 
+when I used the virtual window features of ncurses, which allowed me to segment each specific section of the
+interface and interact with them seperately in code. The only hassle with this approach was managing the
+pointers to each of the windows, and ensuring their memory is freed appropriately when the interface class
+is deconstructed (when the user quits the program).

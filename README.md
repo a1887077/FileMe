@@ -1,22 +1,13 @@
 
 # FileMe
+Aidan Matthews a1887077, Varad Sharma a1885288
 
-A simple terminal-based file manager.
+Have you ever been working in your terminal and wished you had a simple, visual way of managing your files? No more! Introducing FileMe, a simple terminal-based file manager created for Problem Solving and Software Development in Semester 2 2025.
 
-## Usage
-The application has the following controls:
-**Navigation**
- - Up Arrow - navigate up the list of files / directories
- - Down Arrow - navigate down the list of files / directories
- - Enter - navigate into a directory
- - Backspace - navigate into the previous directory (if possible)
+For summary and evaluation documents, please see the [`doc`](doc) folder.
+For usage, see the [`usage.md`](doc/usage.md) guide.
 
-**File / Directory Manipulation**
- - N - Create a new file with a prompt for the name
- - R - Rename a file with a prompt for the new name
- - D - Delete a file or directory with a prompt for confirmation
- - C - Select a file or directory for copying
- - P - Paste the selected file or directory
+For building instructions, please see below:
 
 ## Dependencies
 
@@ -26,6 +17,10 @@ There are several dependencies required to build this project, they are as follo
  - clang-format
  - doctest (installed via cmake)
  - curses (or ncurses)
+
+The development systems used were Arch and Debian Linux on WSL. The dependencies for these platforms can be installed as follows (note this may differ for your system):
+Arch Linux: `sudo pacman -S cmake make clang ncurses`
+Debian Linux: `sudo apt install cmake make clang-format libncurses-dev`
 
 ## Building the Application
 
@@ -39,7 +34,8 @@ This will build the standalone application and required dependencies, placing th
 make build
 ```
 
-After running `make build` the application can be run by executing `./build/fileme`. Note that this is the same as the `make run` build target.
+After running `make build` the application can be run by executing `./build/standalone/FileMe`. Note that this is the same as the `make run` build target. Note that if the `make run` target fails, try
+running `make clean` prior to the `make run` command.
 
 ### Target: test
 
