@@ -1,5 +1,8 @@
 a1885288 - Varad Sharma (Code quality project Reflection)
 
+Initial project goals: Produce a file management system which manages files, and displays information to the user. The program also should have functions to manage files, 
+allow file system navagation, files manipulation, user inputs for insertion, deletion, search and file information/description.  
+
 In the project, I was responsible for developing the main file, ensuring navigation and expected behaviour, coding functions related to the user interface, 
 and testing the whole program after its completion. Aidan worked on backend development, implementing core functionalities that are avaiable for the user and 
 managing data flow between different classes, relationship between these classes. He also performed testing on indivisual classes to ensure each function is working as expected. 
@@ -24,3 +27,8 @@ and adjust the code accordingly. Furthermore, each person fulfulled their assign
 compensating anothers work. we had great communication between us which allowed each member to be on the same page as others and ensured no one was left behind. Even though 
 there isn't much to improve upon since, we could always have better time management, for example working in the holidays, set weekly goals etc. Though this was not required for us
 since our plan incorporated tasks urgency rather than time urgency. 
+
+In the end, most of the initial goals were accomplished except for a file search function and file information/description display to the user. These two functions were left out 
+since our original plan altered a little. The search function was meant to show files and directories but implementing it would not coherently work with the rest of the program. 
+The file information/description display was left out due to limited time and this time was prioritiesed more towards testing the program. Otherwise, all initial goals were accomplished 
+and the program was produced as intended. 

@@ -1,4 +1,7 @@
-This text describes how and why the testing for the whole project was done.
+This text describes how and why the testing for the whole project was done. It also states the initial project goals. 
+
+Initial project goals: Produce a file management system which manages files, and displays information to the user. The program also should have functions to manage files, 
+allow file system navagation, files manipulation, user inputs for insertion, deletion, search and file information/description.  
 
 Testing of the whole project was performed on a system to ensure the program is working as expected. This is essential as testing of each module was done independently
 however, testing that integration of these modules works as expected is also required. checking if back-end private variables flow information correctly to the 
@@ -12,5 +15,5 @@ renaming a file, the file would rename however, the user display would not updat
 notified or visually see the updates. as the user scrolls the files, the user interface displays the current file path. this was not updated and showed the file path for 
 the previously selected file. After testing each command, testing of each error was done to ensure the user feedback is accurate and not misleading. Luckily, when testing
 the errors, there were no unexpected behaviours found. Some commands have a user validation which was also testing in each case to ensure any decision made by the user results
-in an expected behaviour. Testing the whole project displayed all the minor issues with the program and these issues were then fixed. to update the user interface, correct logic was implemented and updating
-the display was done right after a alteration of file/directory was made. This ensured the user was visually seeing what was accurate and correct.  
+in an expected behaviour. Testing the whole project displayed all the minor issues with the program and these issues were then fixed. to update the user interface, correct logic 
+was implemented and updating the display was done right after a alteration of file/directory was made. This ensured the user was visually seeing what was accurate and correct.  
